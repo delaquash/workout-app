@@ -10,7 +10,8 @@
 
 
   <!-- Login -->
-  <form  @submit.prevent="login"
+  <form
+      @submit.prevent="login"
       class="p-8 flex flex-col bg-light-grey rounded-md shadow-lg">
     <h1 class="text-3xl text-at-light-green mb-4">
         Login
@@ -70,7 +71,7 @@ export default {
   name: "login",
   setup() {
     // Create data / vars
-    const router = useRouter()
+    const router = useRouter();
       const email = ref(null);
       const password = ref(null);
       const errorMsg = ref(null)
@@ -83,7 +84,7 @@ export default {
           });
           if (error) throw error;
           // if there is an error here, refer us back to homepage
-          router.push({ name: 'Home' } )
+          router.push({ name: 'Home' })
         } catch (error) {
             // error response with timeout
               errorMsg.value= `Error: ${error.message}`;
