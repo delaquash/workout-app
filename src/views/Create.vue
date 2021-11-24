@@ -1,5 +1,6 @@
 <template>
   <div class="max-w-screen-md mx-auto px-4 py-10">
+
     <!-- status message -->
     <div class="mb-10 p-4 bg-light-grey rounded-md">
       <p class="text-at-light-green">
@@ -13,7 +14,7 @@
     <!-- create  -->
     <div class="p-8 flex items-start bg-light-grey rounded-md shadow-lg">
       <!-- form -->
-      <form class="flex flex-col gap-y-5 w-full">
+      <form @submit.prevent="createWorkout" class="flex flex-col gap-y-5 w-full">
         <h1 class="text-2xl text-at-light-green">
           Record Workout
         </h1>
@@ -76,6 +77,15 @@
               >
             </div>
              <div class="flex flex-col flex-1">
+              <label for="reps" class="mb-1 text-sm text-at-light-green">
+                Reps
+              </label>
+              <input
+                type="text"
+                class="p-2 w-full text-gray-500 focus:outline-none"
+                v-model="item.reps"
+              >
+             <div class="flex flex-col flex-1">
               <label for="weight" class="mb-1 text-sm text-at-light-green">
                 Weight (LB's)
               </label>
@@ -85,15 +95,6 @@
                 v-model="item.weight"
               >
             </div>
-             <div class="flex flex-col flex-1">
-              <label for="reps" class="mb-1 text-sm text-at-light-green">
-                Reps
-              </label>
-              <input
-                type="text"
-                class="p-2 w-full text-gray-500 focus:outline-none"
-                v-model="item.reps"
-              >
             </div>
             <img
               @click="deleteExercise(item.id)"
@@ -104,6 +105,7 @@
           </div>
           <button
                   type="button"
+                  @click="addExercise"
                   class="mt-6 py-2 px-6 rounded-sm self-start text-sm
                   text-white bg-at-light-green duration-200 border-solid
                   border-2 border-transparent hover:border-at-light-green
@@ -176,6 +178,7 @@
           </div>
           <button
                   type="button"
+                  @click="addExercise"
                   class="mt-6 py-2 px-6 rounded-sm self-start text-sm
                   text-white bg-at-light-green duration-200 border-solid
                   border-2 border-transparent hover:border-at-light-green
@@ -187,7 +190,6 @@
         </div>
 
         <button
-                  @click="addExercise"
                   type="submit"
                   class="mt-6 py-2 px-6 rounded-sm self-start text-sm
                   text-white bg-at-light-green duration-200 border-solid
@@ -205,6 +207,7 @@
 <script>
 import { ref } from 'vue';
 import { uid } from 'uid';
+import { supabase } from '../supabase/init';
 
 export default {
   name: "create",
@@ -212,7 +215,7 @@ export default {
     // Create data
       const workoutName = ref("");
       const workoutType = ref('select-workout');
-      const exercises = ref([1]);
+      const exercises = ref([]);
       const statusMsg = ref(null);
       const errorMsg = ref(null);
     // Add exercise
@@ -254,13 +257,36 @@ export default {
     // Listens for chaging of workout type input
       const workoutChange = () => {
         exercises.value = [];
-        addExercise()
+        addExercise();
       }
 
 
     // Create workout
-
-    return { workoutName, workoutType, errorMsg, exercises, statusMsg, addExercise, workoutChange, deleteExercise };
+      const createWorkOut = async () => {
+        try {
+            const { error } = await supabase.from("workouts").insert([
+                {
+                  workoutName: workoutName.value,
+                  workoutType: workoutType.value,
+                  exercises: exercises.value
+                },
+            ]);
+            if( error ) throw error;
+            statusMsg.value = "Success. Workout Created!";
+            workoutName.value = null;
+            workoutType.value = "select-workout";
+            exercises.value = [];
+            setTimeout(() => {
+              statusMsg.value = false;
+            }, 5000);
+        } catch (error) {
+            errorMsg.value = `Error: ${error.message}`;
+            setTimeout(() => {
+              errorMsg.value = false;
+            }, 5000);
+        }
+      }
+    return { workoutName, workoutType, errorMsg, exercises, statusMsg, addExercise, workoutChange, deleteExercise, createWorkOut };
   },
 };
 </script>
