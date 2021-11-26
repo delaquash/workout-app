@@ -20,7 +20,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <router-link
           class="flex flex-col items-center bg-light-grey p-8 shadow-md cursor-pointer"
-          :to="{name: ''}"
+          :to="{name: 'View-Workout, params: {workoutId: workout.id }'}"
           v-for="(workout, index) in data"
           :key="index"
         >
