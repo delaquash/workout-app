@@ -28,6 +28,7 @@ export default {
     const statusMsg = ref(null);
     const route = useRoute();
 const user = computed(() => store.state.user)
+
     // Get current Id of route
     const currentId = route.params.workoutId
 
