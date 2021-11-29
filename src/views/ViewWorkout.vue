@@ -9,11 +9,64 @@
         {{ errorMsg }}
       </p>
     </div>
+
+    <!-- general workout info -->
+    <div v-if="dataLoaded">
+      <div class="flex flex-col items-center p-8 rounded-md shadow-md bg-light-grey relative">
+        <div v-if="user" class="flex absolute left-2 top-2 gap-x-2">
+            <div
+              class="h-7 w-7 rounded-full flex justify-center items-center cursor-pointer bg-light-green shadow-lg"
+              @click="editMode"
+            >
+              <img src="@/assets/images/pencil-light.png"
+                alt=""
+                class="h-3.5 w-auto" />
+            </div>
+            <div
+              class="h-7 w-7 rounded-full flex justify-center items-center cursor-pointer bg-light-green shadow-lg"
+            >
+              <img src="@/assets/images/trash-light.png"
+                alt=""
+                class="h-3.5 w-auto" />
+            </div>
+        </div>
+        <img
+          v-if="data.workoutType === 'cardio'"
+          src="@/assets/images/running-light-green.png"
+          alt=""
+          class="w-auto h-24"
+        />
+        <img
+          v-else
+          src="@/assets/images/dumbbell-light-green.png"
+          alt=""
+          class="w-auto h-24"
+        >
+
+          <span class="mt-6 py-1 5 text-xs text-white bg-at-light-green rounded-lg shadow-md">
+            {{ data.workoutType }}
+          </span>
+
+          <div class="w-4 mt-6">
+            <input
+              v-if="edit"
+              class="p-2
+              w-full
+              text-gray-500
+              focus:outline-none"
+              v-model="data.workoutName"
+            />
+              <h1 v-else class="text-at-light-green text-2xl text-center">
+                {{ data.workoutName}}
+              </h1>
+          </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { computed, ref } from '@vue/reactivity';
+import { computed, ref } from 'vue';
 import { supabase } from '../supabase/init';
 import { useRoute } from 'vue-router';
 import store from '../store/index';
@@ -40,7 +93,6 @@ const user = computed(() => store.state.user)
           if(error) throw error;
           data.value = workout;
           dataLoaded.value = true;
-          console.log(data.value);
       } catch (error) {
         errorMsg.value = error.message;
         setTimeout(() => {
@@ -55,6 +107,11 @@ const user = computed(() => store.state.user)
     // Delete workout
 
     // Edit mode
+    const edit = ref(null);
+
+    const editMode = () => {
+      edit.value = !edit.value;
+    }
 
     // Add exercise
 
@@ -62,7 +119,7 @@ const user = computed(() => store.state.user)
 
     // Update Workout
 
-    return { statusMsg, data, dataLoaded, errorMsg };
+    return { statusMsg, data, dataLoaded, errorMsg, user, edit, editMode };
   },
 };
 </script>

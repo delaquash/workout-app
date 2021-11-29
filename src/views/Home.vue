@@ -13,7 +13,7 @@
                 hover:bg-white hover:text-at-light-green"
           >
               Create Workout
-          </router-link>">
+          </router-link>
       </div>
 
       <!-- Data -->
