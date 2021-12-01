@@ -67,12 +67,10 @@ export default {
     // Get data
     const getData = async () => {
       try {
-        const { data: workout, error } = await supabase.from('workout')
-          .select('*');
+        const { data: workout, error } = await supabase.from('workout').select('*');
           if(error) throw error;
           data.value = workout;
           dataLoaded.value = true;
-
       } catch (error) {
         console.warn(error.message);
       }

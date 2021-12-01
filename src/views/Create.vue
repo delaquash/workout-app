@@ -219,7 +219,7 @@ export default {
       const statusMsg = ref(null);
       const errorMsg = ref(null);
 
-      
+
     // Add exercise
     const addExercise = ()=> {
       if (workoutType.value === 'strength') {
@@ -239,7 +239,6 @@ export default {
         duration:"",
         pace:"",
       });
-
     }
 
     // Delete exercise
